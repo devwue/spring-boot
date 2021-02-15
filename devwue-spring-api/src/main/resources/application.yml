@@ -1,0 +1,44 @@
+management:
+  server:
+    port: 8081
+  metrics:
+    enable:
+      all: true
+    export:
+      statsd:
+        enabled: true
+        flavor: telegraf
+        port: 8125
+
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+      - org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
+  devtools:
+    add-properties: false
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      format_sql: true
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+    generate-ddl: false
+    show-sql: false
+    database-platform: org.hibernate.dialect.MariaDBDialect
+
+
+aws:
+  credential:
+    region: ap-northeast-2
+
+sentry:
+  dsn:
+  use-git-commit-id-as-release: false
+  send-default-pii: true
+  logging:
+    enabled: true
+    minimum-event-level: warn
+    minimum-breadcrumb-level: info

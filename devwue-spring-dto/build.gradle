@@ -1,0 +1,74 @@
+plugins {
+    id "org.flywaydb.flyway" version "6.5.7"
+}
+
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin:  "com.ewerk.gradle.plugins.querydsl"
+
+group 'com.devwue.spring.dto'
+version '1.0-SNAPSHOT'
+
+jar {
+    enabled = true
+}
+//bootJar {
+//    enabled = true
+//    mainClassName = 'NONE'
+//}
+
+dependencies {
+    //flyway for initial work to create db schema
+    implementation 'org.flywaydb:flyway-core:5.0.3'
+//    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.21'
+    implementation 'org.mariadb.jdbc:mariadb-java-client:2.6.2'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    implementation 'com.querydsl:querydsl-core'
+    implementation 'com.querydsl:querydsl-apt'
+    implementation 'com.querydsl:querydsl-jpa'
+
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+flyway {
+    driver = 'org.mariadb.jdbc.Driver'
+    url = 'jdbc:mariadb://127.0.0.1:11801/devwue?useSSL=false'
+    user = 'root'
+    password = 'root'
+    schemas = ['supplier_reservation']
+    locations = ["filesystem:${file('src/main/resources/db/migration').absolutePath}"]
+    println "Flyway Locations=============: $locations"
+}
+
+def queryDslOutput = file("$buildDir/generated/source/apt/main")
+querydsl {
+    library = "com.querydsl:querydsl-apt"
+    jpa = true
+    querydslSourcesDir = queryDslOutput
+}
+sourceSets {
+    main {
+        java {
+            srcDir('src/main/java')
+            srcDir queryDslOutput
+        }
+    }
+}
+
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
+
+clean {
+    delete queryDslOutput
+}

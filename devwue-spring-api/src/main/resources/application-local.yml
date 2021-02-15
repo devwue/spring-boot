@@ -1,0 +1,67 @@
+management:
+  server:
+    port: 8081
+  metrics:
+    export:
+      statsd:
+        enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+      format_sql: true
+    generate-ddl: false
+    show-sql: true
+
+devwue:
+  spring:
+    api:
+      datasource:
+        master:
+          driver-class-name: org.mariadb.jdbc.Driver
+          jdbc-url: jdbc:mariadb://127.0.0.1:11801/devwue?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
+          username: root
+          password: root
+          pool-name: DBMaster-pool
+          minimum-idle: 1
+          maximum-pool-size: 5
+          register-mbeans: true
+          connection-timeout: 3000
+          idle-timeout: 10000
+          validation-timeout: 60000
+          max-lifetime: 61000
+          data-source-properties:
+            cachePrepStmts: true
+            prepStmtCacheSize: 250
+            prepStmtCacheSqlLimit: 2048
+            useServerPrepStmts: true
+        slave:
+          driver-class-name: org.mariadb.jdbc.Driver
+          jdbc-url: jdbc:mariadb://127.0.0.1:11801/devwue?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
+          username: root
+          password: root
+          pool-name: DBSlave-pool
+          minimum-idle: 1
+          maximum-pool-size: 5
+          connection-timeout: 3000
+          idle-timeout: 20000
+          validation-timeout: 60000
+          max-lifetime: 61000
+          read-only: true
+          data-source-properties:
+            cachePrepStmts: true
+            prepStmtCacheSize: 250
+            prepStmtCacheSqlLimit: 2048
+            useServerPrepStmts: true
+
+logging:
+  level:
+    root: debug
+    org.springframework.web: info
+    com.yanolja: DEBUG
+    org.apache: info

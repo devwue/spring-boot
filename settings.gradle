@@ -1,0 +1,14 @@
+pluginManagement {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'devwue-spring'
+
+include 'devwue-spring-dto', 'devwue-spring-api'
+//, 'devwue-spring-eventbus'
+//, 'devwue-spring-daijong'

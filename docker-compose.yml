@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+      - KAFKA_ADVERTISED_HOST_NAME=127.0.0.1
+      - KAFKA_ADVERTISED_PORT=9092
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+    depends_on:
+      - zookeeper
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      - KAFKA_ADVERTISED_HOST_NAME=zookeeper
+  mysql:
+    image: mysql:5.7.31
+    restart: always
+    ports :
+     - 11801:3306
+    volumes:
+#      - ./init.sql:/docker-entrypoint-initdb.d/
+      - ~/programs/docker/mysql/data:/var/lib/mysql
+      - ~/programs/docker/mysql/config:/etc/mysql/conf.d
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    user: 1000:100
