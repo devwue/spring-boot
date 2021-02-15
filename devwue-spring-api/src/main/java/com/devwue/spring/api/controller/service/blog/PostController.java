@@ -1,8 +1,11 @@
 package com.devwue.spring.api.controller.service.blog;
 
 import com.devwue.spring.api.dto.request.PostCreateRequest;
+import com.devwue.spring.api.dto.request.PostSearchRequest;
 import com.devwue.spring.api.service.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +23,10 @@ public class PostController {
     public Object index() {
         return blogService.findByName("test");
     }
+
     @GetMapping("/{postNo}")
     @ResponseStatus(HttpStatus.OK)
-    public Object index(@PathVariable String postNo) throws Exception {
+    public Object detail(@PathVariable String postNo) throws Exception {
         return blogService.findPostByPostNo(postNo);
     }
 
@@ -30,5 +34,15 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public Object create(@RequestBody PostCreateRequest request) {
         return blogService.createPost(request);
+    }
+
+    @GetMapping("/search")
+    public Object search(@RequestParam("name") String name,
+                         @RequestParam(name="page", defaultValue = "0") int page,
+                         @RequestParam(name="size", defaultValue = "10") int size,
+                         @RequestParam(name="sort", defaultValue = "id") String sort) {
+        PostSearchRequest request = new PostSearchRequest();
+        request.setName(name);
+        return blogService.searchPost(request, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, sort)));
     }
 }

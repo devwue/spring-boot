@@ -1,11 +1,14 @@
 package com.devwue.spring.api.service;
 
 import com.devwue.spring.api.dto.request.PostCreateRequest;
-import com.devwue.spring.api.repository.PostDetailRepositoryImpl;
+import com.devwue.spring.api.dto.request.PostSearchRequest;
+import com.devwue.spring.api.repository.PostSearchRepositoryImpl;
 import com.devwue.spring.api.repository.PostJpaRepository;
 import com.devwue.spring.dto.entity.Post;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +19,12 @@ import java.util.Optional;
 @Service
 public class BlogService {
     private final PostJpaRepository postJpaRepository;
+    private final PostSearchRepositoryImpl postSearchRepository;
+
     @Autowired
-    public BlogService(PostJpaRepository postJpaRepository, PostDetailRepositoryImpl postDetailRepository) {
+    public BlogService(PostJpaRepository postJpaRepository, PostSearchRepositoryImpl postSearchRepository) {
         this.postJpaRepository = postJpaRepository;
+        this.postSearchRepository = postSearchRepository;
     }
 
     public List<Post> findByName(String name) {
@@ -41,5 +47,10 @@ public class BlogService {
         post.setContents(request.getContents());
         postJpaRepository.save(post);
         return post;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Post> searchPost(PostSearchRequest request, Pageable pageable) {
+        return postSearchRepository.findByName(request, pageable);
     }
 }
