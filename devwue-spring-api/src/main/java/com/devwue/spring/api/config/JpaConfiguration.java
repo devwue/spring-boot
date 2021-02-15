@@ -66,14 +66,37 @@ public class JpaConfiguration {
 
     @Primary
     @Bean
-    public DataSource ApiDataSource(DataSource dataSource) {
-        return new LazyConnectionDataSourceProxy(dataSource);
+    public DataSource ApiDataSource(DataSource apiMasterDataSource, DataSource apiSlaveDataSource) {
+        return new LazyConnectionDataSourceProxy(routingDataSource(apiMasterDataSource, apiSlaveDataSource));
     }
 
     @Bean
     @ConfigurationProperties("devwue.spring.api.datasource.master")
-    public DataSource dataSource() {
+    public DataSource apiMasterDataSource() {
         return DataSourceBuilder.create().type(HikariDataSource.class).build();
     }
 
+    @Bean
+    @ConfigurationProperties("devwue.spring.api.datasource.slave")
+    public DataSource apiSlaveDataSource() {
+        return DataSourceBuilder.create().type(HikariDataSource.class).build();
+    }
+
+    @Bean
+    public AbstractRoutingDataSource routingDataSource(DataSource dataSource, DataSource readDataSource ) {
+        AbstractRoutingDataSource proxy =  new AbstractRoutingDataSource() {
+            @Override
+            protected Object determineCurrentLookupKey() {
+                boolean isReadOnly = TransactionSynchronizationManager.isCurrentTransactionReadOnly();
+                return isReadOnly ? "slave" : "master";
+            }
+        };
+        Map<Object,Object> map = new HashMap<>();
+        map.put("master", dataSource);
+        map.put("slave", readDataSource);
+        proxy.setTargetDataSources(map);
+        proxy.setDefaultTargetDataSource(dataSource);
+
+        return proxy;
+    }
 }
