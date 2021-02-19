@@ -1,10 +1,13 @@
 package com.devwue.spring.api.repository;
 
 import com.devwue.spring.api.dto.request.PostSearchRequest;
+import com.devwue.spring.api.dto.response.PostTypeResponse;
 import com.devwue.spring.dto.entity.Post;
 import com.devwue.spring.dto.entity.QPost;
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +18,11 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
+import javax.naming.event.ObjectChangeListener;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import java.util.List;
 
 import static com.devwue.spring.dto.entity.QPost.post;
 
@@ -37,12 +43,20 @@ public class PostSearchRepositoryImpl extends QuerydslRepositorySupport {
     }
 
     public Page<Post> findByName(PostSearchRequest request, Pageable pageable) {
-        QPost qPost = post;
-        JPQLQuery<Post> query = queryFactory.selectFrom(qPost)
-                .where(eqName(request.getName()));
+        JPQLQuery<Post> query = queryFactory.selectFrom(post)
+                .where(eqName(request.getName()))
+                .orderBy(post.id.desc())
+                ;
 
         QueryResults<Post> posts= getQuerydsl().applyPagination(pageable, query).fetchResults();
         return new PageImpl<>(posts.getResults(), pageable, posts.getTotal());
+    }
+
+    public List<PostTypeResponse> getSummaryType() {
+        return queryFactory.selectFrom(post)
+                .select(Projections.constructor(PostTypeResponse.class, post.type, Expressions.ONE))
+                .groupBy(post.type)
+                .fetch();
     }
 
     private BooleanExpression eqName(String name) {

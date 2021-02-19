@@ -45,4 +45,9 @@ public class PostController {
         request.setName(name);
         return blogService.searchPost(request, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, sort)));
     }
+
+    @GetMapping("/group")
+    public Object group() {
+        return blogService.getSummaryType();
+    }
 }

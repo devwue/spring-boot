@@ -2,6 +2,7 @@ package com.devwue.spring.api.service;
 
 import com.devwue.spring.api.dto.request.PostCreateRequest;
 import com.devwue.spring.api.dto.request.PostSearchRequest;
+import com.devwue.spring.api.dto.response.PostTypeResponse;
 import com.devwue.spring.api.repository.PostSearchRepositoryImpl;
 import com.devwue.spring.api.repository.PostJpaRepository;
 import com.devwue.spring.dto.entity.Post;
@@ -52,5 +53,10 @@ public class BlogService {
     @Transactional(readOnly = true)
     public Page<Post> searchPost(PostSearchRequest request, Pageable pageable) {
         return postSearchRepository.findByName(request, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostTypeResponse> getSummaryType() {
+        return postSearchRepository.getSummaryType();
     }
 }
