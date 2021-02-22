@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <property name="LOG_PATH" value="/data/logs"/>
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%magenta([%d{yyyy-MM-dd HH:mm:ss}]) - %highlight([%-5level]) -[trackId=%X{trackId}] %green([%logger{35}]) - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="File" class="ch.qos.logback.core.FileAppender">
+        <file>${LOG_PATH}/spring.log</file>
+        <encoder>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) [trackId=%X{trackId}] [caller=%X{caller}] %logger{36}.%M - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="Sentry" class="io.sentry.logback.SentryAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+    </appender>
+
+    <springProfile name="qa, stage, live">
+        <root level="WARN">
+            <appender-ref ref="Sentry"/>
+            <appender-ref ref="File"/>
+        </root>
+    </springProfile>
+    <springProfile name="local, test, dev">
+        <root level="DEBUG">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="File"/>
+        </root>
+    </springProfile>
+
+    <logger name="org.springframework.boot" level="INFO" />
+    <logger name="io.swagger.models.parameters.AbstractSerializableParameter" level="ERROR" />
+    <logger name="com.devwue.spring" level="DEBUG" />
+</configuration>
