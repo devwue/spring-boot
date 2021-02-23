@@ -10,8 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @ActiveProfiles("local")
@@ -25,6 +24,8 @@ public class HealthControllerTests {
     public void test() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/health").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(Matchers.containsString("ok")));
+                .andExpect(content().string(Matchers.containsString("ok")))
+                .andExpect(jsonPath("$.health").value("ok"));
+
     }
 }
