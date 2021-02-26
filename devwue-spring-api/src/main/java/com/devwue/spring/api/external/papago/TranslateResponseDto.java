@@ -8,6 +8,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class TranslateResponseDto {
     @JsonProperty("message")
     private Message message;
