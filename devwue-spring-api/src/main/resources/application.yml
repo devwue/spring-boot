@@ -4,6 +4,9 @@ external:
       url: https://openapi.naver.com
       clientId: UfM8_0BpQj7lFX_CRhxh
       clientSecret: IaP5Y4HwQw
+    discord:
+      papabot:
+        token: ODE0ODQxNTMwODMyNTE5MTg4.YDjuTw.go5ZNyAQFQl5pNS3n_hjUwcJEfg
 
 management:
   server:
