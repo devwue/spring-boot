@@ -4,11 +4,13 @@ import com.devwue.spring.api.client.PapagoClient;
 import com.devwue.spring.api.external.papago.DetectLangResponseDto;
 import com.devwue.spring.api.external.papago.TranslateResponseDto;
 import com.devwue.spring.api.external.papago.TranslateRequestDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 
+@Slf4j
 @Service
 public class PapagoService {
     private final PapagoClient papagoClient;
@@ -24,11 +26,21 @@ public class PapagoService {
     }
 
     public String translate(String text) {
-        TranslateRequestDto.TranslateRequestDtoBuilder papagoTranslateDtoBuilder = TranslateRequestDto.builder()
-                .source(detect(text)).target("en").text(text);
-        TranslateResponseDto response =  papagoClient.translateWithMap(papagoTranslateDtoBuilder.build(), buildHeader());
+        String sourceLang = detect(text);
+        String targetLang = "en";
 
-        return response.getMessage().getResult().getTranslatedText();
+        if (sourceLang.equals(targetLang)) {
+            targetLang = "ko";
+        }
+        TranslateRequestDto.TranslateRequestDtoBuilder papagoTranslateDtoBuilder = TranslateRequestDto.builder()
+                .source(detect(text)).target(targetLang).text(text);
+        try {
+            TranslateResponseDto response = papagoClient.translateWithMap(papagoTranslateDtoBuilder.build(), buildHeader());
+            return response.getMessage().getResult().getTranslatedText();
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return text;
+        }
     }
 
     public String detect(String text) {
