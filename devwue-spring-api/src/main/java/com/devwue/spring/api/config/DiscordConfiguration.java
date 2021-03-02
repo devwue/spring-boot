@@ -14,6 +14,9 @@ import java.util.List;
 @Slf4j
 @Configuration
 public class DiscordConfiguration {
+    /**
+     * https://discordapi.com/permissions.html
+     */
     @Value("${external.api.discord.papabot.token}")
     private String token;
 

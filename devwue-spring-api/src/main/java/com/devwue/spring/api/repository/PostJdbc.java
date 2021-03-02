@@ -18,8 +18,8 @@ public class PostJdbc {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private final String CREATE = "insert into post(contents, name, type, post_no, created_at, updated_at) value (?,?,?,?,?,?)";
-    private final String FIND_ALL = "select * from post";
+    private final String CREATE = "insert into posts(contents, name, type, post_no, created_at, updated_at) value (?,?,?,?,?,?)";
+    private final String FIND_ALL = "select * from posts";
 
     public Post create(Post post) {
         KeyHolder holder = new GeneratedKeyHolder();

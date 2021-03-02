@@ -6,7 +6,7 @@ external:
       clientSecret: IaP5Y4HwQw
     discord:
       papabot:
-        token: ODE0ODQxNTMwODMyNTE5MTg4.YDjuTw.go5ZNyAQFQl5pNS3n_hjUwcJEfg
+        token: ODE0ODQxNTMwODMyNTE5MTg4.YDjuTw.E_C5DTUXXboHUPAnw3aaR4N8wCQ
 
 management:
   server:
