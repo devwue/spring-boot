@@ -21,9 +21,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-      format_sql: true
     generate-ddl: false
     show-sql: true
+    properties:
+      hibernates:
+        format_sql: true
+
 
 devwue:
   spring:
@@ -72,3 +75,4 @@ logging:
     org.springframework.web: info
     com.yanolja: DEBUG
     org.apache: info
+    org.hibernate.type.descriptor: trace
