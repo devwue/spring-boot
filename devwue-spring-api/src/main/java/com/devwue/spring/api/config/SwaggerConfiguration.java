@@ -10,18 +10,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.service.ResponseMessage;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Configuration
@@ -71,7 +67,10 @@ public class SwaggerConfiguration {
                 .apis(RequestHandlerSelectors.basePackage("com.devwue.spring.api.controller.service"))
                 .paths(PathSelectors.any())
                 .build()
-                .apiInfo(apiInfo("1.0"));
+                .apiInfo(apiInfo("1.0"))
+                .securityContexts(Arrays.asList(securityContext()))
+                .securitySchemes(Arrays.asList(apiKey()))
+                ;
     }
 
     /**
@@ -86,5 +85,27 @@ public class SwaggerConfiguration {
                 new ResponseMessageBuilder().code(404).message("Not Found").build(),
                 new ResponseMessageBuilder().code(500).message("Server Error").build()
         );
+    }
+
+    private ApiKey apiKey() {
+        return new ApiKey("JWT", "accessToken", "header");
+    }
+
+    List<SecurityReference> defaultAuth() {
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+        AuthorizationScope authorizationScope = new AuthorizationScope("global", "어디서나 접속가능");
+        authorizationScopes[0] = authorizationScope;
+        return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
+    }
+
+    private SecurityContext securityContext() {
+        return springfox
+                .documentation
+                .spi.service
+                .contexts
+                .SecurityContext
+                .builder()
+                .securityReferences(defaultAuth())
+                .forPaths(PathSelectors.any()).build();
     }
 }
