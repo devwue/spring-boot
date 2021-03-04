@@ -1,8 +1,12 @@
 package com.devwue.spring.api.controller.service.blog;
 
+import com.devwue.spring.api.service.MemberService;
 import com.devwue.spring.api.support.JwtUtil;
 import com.devwue.spring.dto.AuthRequest;
+import com.devwue.spring.dto.MemberRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,21 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 public class UserController {
     @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private MemberService memberService;
 
     @PostMapping("/authenticate")
-    public Object generateToken(@RequestBody AuthRequest authRequest) throws Exception {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("invalid user/password");
-        }
-        return jwtUtil.generateToken(authRequest.getEmail());
+    public Object generateToken(@RequestBody MemberRequest memberRequest) throws Exception {
+        return new ResponseEntity<>(memberService.login(memberRequest), HttpStatus.OK);
     }
 }
