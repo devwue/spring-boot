@@ -26,6 +26,26 @@ spring:
     properties:
       hibernates:
         format_sql: true
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: devwue
+      auto-offset-reset: latest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: com.devwue.spring
+    listener:
+      ack-mode: manual
+      concurrency: 1
 
 
 devwue:
@@ -71,8 +91,8 @@ devwue:
 
 logging:
   level:
-    root: debug
+    root: info
     org.springframework.web: info
-    com.yanolja: DEBUG
+    com.devwue: DEBUG
     org.apache: info
     org.hibernate.type.descriptor: trace
