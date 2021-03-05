@@ -94,5 +94,3 @@ logging:
     root: info
     org.springframework.web: info
     com.devwue: DEBUG
-    org.apache: info
-    org.hibernate.type.descriptor: trace

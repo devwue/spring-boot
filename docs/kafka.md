@@ -31,6 +31,15 @@
   ````bash
   kafka-topics.sh --zookeeper <zhost>:2181 --list | grep <topic_name>
   ````
+  
+* 토픽 offset 돌리기
+  ```bash
+  kafka-consumer-groups --bootstrap-server {url} \
+  --topic {topic} \
+  --group {consumer-group} \
+  --reset-offsets --to-datetime 2020-11-11T00:00:00.000+0900 \
+  --execute
+   ```
 
 ### 토픽 오프셋 
 > 참조: https://gunju-ko.github.io/kafka/2018/04/02/Kafka-Offsets.html
