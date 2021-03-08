@@ -1,0 +1,19 @@
+{
+  "type" : "record",
+  "name" : "MemberPoint",
+  "namespace" : "com.devwue.spring.avro",
+  "doc" : "포인트 적립을 위한 테스트",
+  "fields" : [ {
+    "name" : "userId",
+    "type" : "long",
+    "doc" : "userId"
+  }, {
+    "name" : "pointType",
+    "type" : "string",
+    "doc" : "string point type"
+  }, {
+    "name" : "point",
+    "type" : "int",
+    "doc" : "save point"
+  } ]
+}
