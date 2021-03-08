@@ -72,6 +72,7 @@ devwue:
             prepStmtCacheSize: 250
             prepStmtCacheSqlLimit: 2048
             useServerPrepStmts: true
+          registerMbeans: true
         slave:
           driver-class-name: org.mariadb.jdbc.Driver
           jdbc-url: jdbc:mariadb://127.0.0.1:11801/devwue?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
