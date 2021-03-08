@@ -1,6 +1,7 @@
 package com.devwue.spring.api.service;
 
 import com.devwue.spring.api.event.devwue.KafkaEvent;
+import com.devwue.spring.avro.MemberPoint;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.TopicPartition;
@@ -21,6 +22,9 @@ import java.util.Map;
 public class KafkaService implements ConsumerSeekAware {
     @Autowired
     private KafkaTemplate kafkaTemplate;
+
+    @Autowired
+    private PointService pointService;
 
     private  static ThreadLocal<ConsumerSeekCallback> seekCallback = new ThreadLocal<>();
 
@@ -47,15 +51,15 @@ public class KafkaService implements ConsumerSeekAware {
     }
 
     // 다른 방법
-    @KafkaListener(topics = "test", groupId = "test2")
-    public void consumerMessage(ConsumerRecord record, Acknowledgment acknowledgment) throws InterruptedException {
+    @KafkaListener(topics = "point", groupId = "test2")
+    public void consumerMessage(ConsumerRecord<String, MemberPoint> record, Acknowledgment acknowledgment) throws InterruptedException {
         log.debug("topic:{}, headers: {}, partition: {}, offset: {}, value: {} ",
                 record.topic(), record.headers().toArray(),
                 record.partition(), record.offset(),
                 record.value());
         try {
-
-            if (true) {
+            MemberPoint point = record.value();
+            if (pointService.savePoint(point)) {
                 throw new Exception("test");
             }
             acknowledgment.acknowledge();

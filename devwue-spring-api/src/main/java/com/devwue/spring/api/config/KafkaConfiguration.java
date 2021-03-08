@@ -19,6 +19,9 @@ import java.util.HashMap;
 public class KafkaConfiguration {
     @Value("${spring.kafka.producer.bootstrap-servers}")
     private String producerBootStrapAddress;
+    @Value("${spring.kafka.producer.properties.schema.registry.url}")
+    private String schemaRegistryUrl;
+
     @Value("${spring.kafka.consumer.bootstrap-servers}")
     private String consumerBootStrapAddress;
     @Value("${spring.kafka.consumer.groupId")
@@ -30,6 +33,8 @@ public class KafkaConfiguration {
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, producerBootStrapAddress);
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        config.put("schema.registry.url", schemaRegistryUrl);
+        config.put("specific.avro.reader", "true");
 
         return new DefaultKafkaProducerFactory<>(config);
     }

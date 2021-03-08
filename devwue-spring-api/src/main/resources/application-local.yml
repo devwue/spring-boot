@@ -30,19 +30,21 @@ spring:
     producer:
       bootstrap-servers: localhost:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      properties:
+        schema.registry.url: http://localhost:8081
+        secific.avro.reader: true
     consumer:
       bootstrap-servers: localhost:9092
       group-id: devwue
       auto-offset-reset: latest
       enable-auto-commit: false
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
       properties:
-        spring:
-          json:
-            trusted:
-              packages: com.devwue.spring
+        spring.json.trusted.packages: com.devwue.spring
+        schema.registry.url: http://localhost:8081
+        specific.avro.reader: true
     listener:
       ack-mode: manual
       concurrency: 1

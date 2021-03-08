@@ -1,5 +1,6 @@
 package com.devwue.spring.api.service;
 
+import com.devwue.spring.api.model.MemberUser;
 import com.devwue.spring.api.repository.ServiceRoleRepository;
 import com.devwue.spring.api.repository.UserRepository;
 import com.devwue.spring.dto.entity.ServiceRole;
@@ -30,7 +31,9 @@ public class UserService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(email);
         }
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthorities(user));
+        return new MemberUser(user.getEmail(), user.getPassword(),
+                getAuthorities(user), user.getId());
+        //return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthorities(user));
     }
 
     private List<GrantedAuthority> getAuthorities(User user) {

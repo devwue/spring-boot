@@ -1,4 +1,5 @@
 CREATE DATABASE if not exists devwue character set utf8mb4 collate utf8mb4_unicode_ci;
+use devwue;
 
 CREATE TABLE `posts` (
                         `id` bigint(20) NOT NULL AUTO_INCREMENT,

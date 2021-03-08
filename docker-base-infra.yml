@@ -1,0 +1,16 @@
+# DB만 별도로 분리
+version: '3.8'
+services:
+  mysql:
+    image: mysql:5.7.31
+    restart: always
+    ports :
+     - 11801:3306
+    volumes:
+      - ./docs/docker/init.d:/docker-entrypoint-initdb.d/
+      - ../docker/mysql/data:/var/lib/mysql
+      - ./docs/docker/mysql/config:/etc/mysql/conf.d
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    user: 1000:100
