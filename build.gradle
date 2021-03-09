@@ -46,6 +46,7 @@ subprojects {
     apply plugin: 'eclipse'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'jacoco'
 
     sourceCompatibility = 11
     targetCompatibility = 11
@@ -70,6 +71,49 @@ subprojects {
     }
 
     dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+
         implementation 'com.amazonaws:aws-java-sdk-kms:1.11.734'
+
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+        finalizedBy 'jacocoTestReport'
+    }
+
+    jacoco {
+        reportsDir = file("${project.rootDir}/reports")
+    }
+
+    jacocoTestReport {
+        reports {
+            html.enabled true
+            xml.enabled false
+            // sonar 연동이면 on
+            csv.enabled true
+        }
+
+        finalizedBy 'jacocoTestCoverageVerification'
+    }
+
+    jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                element = 'CLASS'
+                limit {
+                    // 측정 기준
+                    counter = 'BRANCH'
+
+                    // 성공 기준
+                    value = 'COVEREDRATIO'
+                    minimum = 0.90
+                }
+            }
+        }
     }
 }
