@@ -2,6 +2,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.github.imflog.kafka-schema-registry-gradle-plugin'
 apply plugin: 'com.commercehub.gradle.plugin.avro'
+apply plugin: 'groovy'
 
 group 'com.devwue.spring.api'
 version '1.0-SNAPSHOT'
@@ -53,10 +54,28 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
 
+    testImplementation 'org.spockframework:spock-spring:2.0-M3-groovy-3.0'
+    testImplementation 'org.codehaus.groovy:groovy-all:3.0.6'
 }
 
 test {
     useJUnitPlatform()
+}
+sourceSets {
+    test {
+        groovy {
+            srcDirs = ['test/groovy'];
+        }
+    }
+}
+configurations.all {
+    resolutionStrategy {
+        eachDependency { DependencyResolveDetails details ->
+            if (details.requested.group == 'org.codehaus.groovy') {
+                details.useVersion('3.0.3')
+            }
+        }
+    }
 }
 
 bootRun {
