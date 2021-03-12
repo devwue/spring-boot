@@ -40,6 +40,11 @@ spring:
     database-platform: org.hibernate.dialect.MariaDBDialect
 
 
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
 aws:
   credential:
     region: ap-northeast-2
