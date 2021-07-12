@@ -2,11 +2,11 @@ external:
   api:
     papago:
       url: https://openapi.naver.com
-      clientId: UfM8_0BpQj7lFX_CRhxh
-      clientSecret: IaP5Y4HwQw
+      clientId:
+      clientSecret:
     discord:
       papabot:
-        token: ODE0ODQxNTMwODMyNTE5MTg4.YDjuTw.E_C5DTUXXboHUPAnw3aaR4N8wCQ
+        token:
 
 management:
   server:

@@ -2,8 +2,11 @@ external:
   api:
     papago:
       url: https://openapi.naver.com
-      clientId: UfM8_0BpQj7lFX_CRhxh
-      clientSecret: IaP5Y4HwQw
+      clientId:
+      clientSecret:
+    discord:
+      papabot:
+        token:
 
 management:
   server:
@@ -91,6 +94,24 @@ devwue:
             prepStmtCacheSize: 250
             prepStmtCacheSqlLimit: 2048
             useServerPrepStmts: true
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: full
+        decode404: false
+  #        requestInterceptors:
+  #          - com.devwue.spring.api.requestInterceptor
+  #        retryer: com.devwue.spring.api.requestInterceptor
+  #        errorDecoder: com.devwue.spring.api.requestInterceptor
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
 
 logging:
   level:
